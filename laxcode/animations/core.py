@@ -442,6 +442,11 @@ class SimpleAnimator:
         }
         self._idx = 0
     
+    def set_mode(self, mode: AnimationMode) -> None:
+        """Set animation mode"""
+        self.mode = mode
+        self._idx = 0
+
     def get_frame(self) -> str:
         """Get a single animation frame"""
         chars = self._spinner_chars.get(self.mode, self._spinner_chars[AnimationMode.IDLE])
