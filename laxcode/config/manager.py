@@ -135,7 +135,18 @@ class ConfigManager:
         
         env_var = env_vars.get(provider)
         if env_var:
-            return os.getenv(env_var)
+            env_key = os.getenv(env_var)
+            if env_key:
+                return env_key
+        
+        # Check saved key file (for non-environment setup)
+        key_file = self.config_dir / f"{provider}_key.txt"
+        if key_file.exists():
+            try:
+                with open(key_file, 'r', encoding='utf-8') as f:
+                    return f.read().strip()
+            except Exception:
+                pass
         
         return None
     
@@ -193,6 +204,11 @@ class ConfigManager:
             api_key = Prompt.ask(f"Enter your {provider.upper()} API key", password=True)
             if api_key:
                 self.config.api_keys[provider] = api_key
+                # Save key to file for persistence
+                key_file = self.config_dir / f"{provider}_key.txt"
+                self.config_dir.mkdir(parents=True, exist_ok=True)
+                with open(key_file, 'w', encoding='utf-8') as f:
+                    f.write(api_key)
                 self.console.print("[green][OK] API key configured[/green]")
             else:
                 self.console.print("[yellow][WARN] No API key provided. You can set it later.[/yellow]")

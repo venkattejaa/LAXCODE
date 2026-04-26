@@ -57,18 +57,19 @@ def quick_setup_nvidia(api_key: str, model: str = "llama-3.1-8b") -> bool:
     config.model = model
     
     # Set API key
-    config.api_keys["nvidia"] = api_key
+    config_manager.config.api_keys["nvidia"] = api_key
     
     # Also set environment variable for current session
     os.environ["NVIDIA_API_KEY"] = api_key
     
-    # Save config
+    # Ensure config directory exists
+    config_manager.config_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Save config (without API keys in the JSON for security)
     config_manager.save()
     
     # Save API key to a separate file for persistence
-    config_dir = Path.home() / ".laxcode"
-    config_dir.mkdir(parents=True, exist_ok=True)
-    key_file = config_dir / "nvidia_key.txt"
+    key_file = config_manager.config_dir / "nvidia_key.txt"
     with open(key_file, 'w', encoding='utf-8') as f:
         f.write(api_key)
     
