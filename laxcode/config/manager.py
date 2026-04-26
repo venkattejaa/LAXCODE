@@ -182,7 +182,7 @@ class ConfigManager:
         # Check if key exists in environment
         existing_key = os.getenv(env_var)
         if existing_key:
-            self.console.print(f"[green]✓ Found {env_var} in environment variables[/green]")
+            self.console.print(f"[green][OK] Found {env_var} in environment variables[/green]")
             use_existing = Confirm.ask("Use existing API key from environment?", default=True)
             if use_existing:
                 self.config.api_keys[provider] = existing_key
@@ -193,9 +193,9 @@ class ConfigManager:
             api_key = Prompt.ask(f"Enter your {provider.upper()} API key", password=True)
             if api_key:
                 self.config.api_keys[provider] = api_key
-                self.console.print(f"[green]✓ API key configured[/green]")
+                self.console.print("[green][OK] API key configured[/green]")
             else:
-                self.console.print("[yellow]⚠ No API key provided. You can set it later.[/yellow]")
+                self.console.print("[yellow][WARN] No API key provided. You can set it later.[/yellow]")
         
         # Model selection for NVIDIA
         if provider == "nvidia":
@@ -248,7 +248,7 @@ Available models:
         self.save()
         
         self.console.print("\n" + "=" * 50)
-        self.console.print("[bold green]✓ LAXCODE Configuration Complete![/bold green]")
+        self.console.print("[bold green][OK] LAXCODE Configuration Complete![/bold green]")
         self.console.print("=" * 50)
         self.console.print(f"\nProvider: [cyan]{provider.upper()}[/cyan]")
         self.console.print(f"Model: [cyan]{self.config.model}[/cyan]")
@@ -279,8 +279,9 @@ Available models:
         ]
         
         for provider in ["nvidia", "openai", "anthropic"]:
-            key_status = "✓ Set" if self.get_api_key(provider) else "✗ Not set"
-            color = "green" if self.get_api_key(provider) else "red"
+            has_key = self.get_api_key(provider) is not None
+            key_status = "[Set]" if has_key else "[Not set]"
+            color = "green" if has_key else "red"
             lines.append(f"  {provider}: [{color}]{key_status}[/{color}]")
         
         self.console.print("\n".join(lines))
