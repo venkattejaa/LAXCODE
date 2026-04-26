@@ -89,10 +89,16 @@ class LaxcodeAgent:
             self.console.print("[yellow]No API key configured. Run 'laxcode setup' to configure.[/yellow]")
             return False
         
+        # Get the full model name (convert alias to full name for NVIDIA)
+        model = self.config.model
+        if self.config.provider == "nvidia":
+            from ..providers.nvidia_nim import NvidiaNIMProvider
+            model = NvidiaNIMProvider.AVAILABLE_MODELS.get(model, model)
+        
         # Initialize provider
         provider_config = ProviderConfig(
             api_key=api_key,
-            model=self.config.model,
+            model=model,
             temperature=self.config.temperature,
             max_tokens=self.config.max_tokens,
             top_p=self.config.top_p,
