@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "laxcode"
+version = "1.1.0"
+description = "LAXCODE - Agentic AI Coding Agent with Laxmana AI animations and NVIDIA NIM API support"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "LAXCODE Team", email = "venkattejaa@gmail.com"}
+]
+keywords = ["ai", "agent", "coding", "cli", "nvidia", "nim", "laxmana"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Tools",
+]
+
+dependencies = [
+    "rich>=13.0.0",
+    "textual>=0.41.0",
+    "aiohttp>=3.9.0",
+    "pydantic>=2.0.0",
+    "click>=8.1.0",
+    "prompt-toolkit>=3.0.0",
+    "typing-extensions>=4.5.0",
+    "watchdog>=3.0.0",
+    "pathspec>=0.11.0",
+    "colorama>=0.4.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+]
+
+[project.scripts]
+laxcode = "laxcode.main:main"
+lax = "laxcode.main:main"
+
+[project.urls]
+Homepage = "https://github.com/venkattejaa/LAXCODE"
+Documentation = "https://github.com/venkattejaa/LAXCODE#readme"
+Repository = "https://github.com/venkattejaa/LAXCODE.git"
+Issues = "https://github.com/venkattejaa/LAXCODE/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["laxcode*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
