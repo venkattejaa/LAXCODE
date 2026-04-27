@@ -197,6 +197,30 @@ pip install -e .
 
 ---
 
+## Changelog
+
+### v1.2.0 (Current)
+**New Features:**
+- Diff-based editing with `apply_diff` tool
+- Test runner (`run_tests`) for pytest integration
+- Code linter (`lint`) with ruff support
+- Moonshot Kimi provider support
+
+**Bug Fixes:**
+- Fixed file creation with empty `old_string`
+- Fixed template escaping in SYSTEM_PROMPT
+- Fixed Windows Unicode encoding issues
+- Fixed agent loop syntax errors
+
+**Improvements:**
+- Test-driven development guidance
+- ASCII-safe terminal animations
+- All 22 unit tests passing
+
+See [RELEASE_NOTES.md](RELEASE_NOTES.md) for full details.
+
+---
+
 ## Built by
 
 **Sugali Venkata Teja Naik** — AI engineer and full-stack developer from Guntakal, Andhra Pradesh.
