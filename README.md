@@ -1,55 +1,35 @@
 # LAXCODE
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.0-blue.svg" alt="Version">
-  <img src="https://img.shields.io/badge/python-3.9+-green.svg" alt="Python">
-  <img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License">
-</p>
+**An agentic AI coding assistant for your terminal.** Reads your files, writes code, runs shell commands, and remembers context — powered by NVIDIA NIM (free), OpenAI, or Anthropic.
 
-<p align="center">
-  <strong>Agentic AI Coding Assistant powered by Laxmana AI</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/NVIDIA-NIM-76B900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA NIM">
-  <img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI">
-  <img src="https://img.shields.io/badge/Anthropic-191919?style=for-the-badge&logo=anthropic&logoColor=white" alt="Anthropic">
-</p>
+![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-yellow.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-green.svg)
+![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM-76B900?logo=nvidia&logoColor=white)
 
 ---
 
-## 🚀 Features
+## What it does
 
-- **🎨 Laxmana AI Animations** - Beautiful terminal animations that react to your commands
-- **🤖 Multi-Provider Support** - NVIDIA NIM (FREE), OpenAI, Anthropic Claude
-- **📁 File Operations** - Read, edit, search files with line numbers
-- **🔧 Tool System** - Extensible architecture with file, shell, and search tools
-- **💬 Interactive Chat** - Natural conversation with AI assistant
-- **📊 Session Management** - Persistent conversation history
-- **🛡️ Safety First** - Restricted file operations and validated shell commands
+LAXCODE runs in your terminal and acts as a coding agent. You talk to it in plain English — it reads your codebase, writes or edits files, runs bash commands, and searches through your project. It keeps the full conversation in a session so it understands context across messages.
 
-## 🎭 Laxmana AI Animation System
+Unlike most AI coding tools, **NVIDIA NIM support means you can run it completely free** — no OpenAI subscription required.
 
-The Laxmana AI core provides visual feedback through beautiful terminal animations:
+---
 
-| Mode | Color | When Active |
-|------|-------|-------------|
-| 🟡 **Idle** | Gold | Waiting for input |
-| 🟢 **Listening** | Green | Ready to receive |
-| 🟣 **Processing** | Purple | Thinking/working |
-| 🔵 **Working** | Cyan | Generating code |
-| 🔴 **Error** | Red | Error occurred |
-| ✅ **Success** | Green | Completed |
+## Features
 
-## 📦 Installation
+- **Multi-provider** — NVIDIA NIM (free), OpenAI, Anthropic Claude
+- **File operations** — read, edit, glob patterns, directory view
+- **Shell execution** — runs bash commands with safety checks
+- **Code search** — grep across your entire project
+- **Session persistence** — conversation history saved to `~/.laxcode/sessions/`
+- **Laxmana AI animations** — terminal state indicators (idle, processing, working, error)
+- **Single message mode** — use it non-interactively in scripts
 
-### From PyPI (Coming Soon)
+---
 
-```bash
-pip install laxcode
-```
-
-### From Source
+## Installation
 
 ```bash
 git clone https://github.com/venkattejaa/LAXCODE.git
@@ -57,171 +37,90 @@ cd LAXCODE
 pip install -e .
 ```
 
-## 🚀 Quick Start
+PyPI package coming in v1.2.
 
-### 1. Configure Your API Key
+---
+
+## Quick start
+
+### 1. Get a free NVIDIA NIM API key
+
+Go to [build.nvidia.com/explore](https://build.nvidia.com/explore) → sign up → copy your key. It's free.
+
+### 2. Configure
 
 ```bash
 laxcode setup
 ```
 
-This will guide you through:
-- Selecting your AI provider (NVIDIA NIM recommended - it's FREE!)
-- Entering your API key
-- Choosing your preferred model
-- Setting preferences
+Or set directly:
 
-### 2. Start Coding
+```bash
+laxcode --set-nvidia-key YOUR_API_KEY
+```
+
+### 3. Run
 
 ```bash
 # Interactive mode
 laxcode
 
 # Single message
-laxcode "Create a Python function to calculate fibonacci"
+laxcode "Write a FastAPI endpoint that returns a list of users"
 ```
 
-## 🔌 Provider Setup
+---
 
-### NVIDIA NIM (Recommended - FREE!)
+## Usage
 
-1. Get your free API key: https://build.nvidia.com/explore
-2. Run: `laxcode setup`
-3. Select NVIDIA NIM
-4. Enter your API key
+### Interactive commands
 
-**Available Free Models:**
-- `llama-3.1-8b` (Fast, efficient) ⭐ Recommended
-- `llama-3.1-70b` (High quality)
-- `llama-3.1-405b` (Best quality)
-- `nemotron-4-340b` (NVIDIA's model)
-- `phi-3-medium` (Fast)
-- `mistral-7b` (Efficient)
-- `mixtral-8x7b` (MoE)
-- `gemma-2-9b` (Lightweight)
+| Command | What it does |
+|---|---|
+| `/read <path>` | Read a file with line numbers |
+| `/glob <pattern>` | Find files matching a pattern |
+| `/grep <pattern>` | Search for text across files |
+| `/config` | Show current config |
+| `/sessions` | List saved sessions |
+| `/tools` | List available tools |
+| `/clear` | Clear screen |
+| `/exit` | Exit |
 
-### OpenAI
-
-```bash
-export OPENAI_API_KEY=your_key_here
-laxcode setup
-```
-
-### Anthropic Claude
-
-```bash
-export ANTHROPIC_API_KEY=your_key_here
-laxcode setup
-```
-
-## 💻 Usage
-
-### Interactive Commands
-
-Once in interactive mode (`laxcode`), you can use:
+### Example session
 
 ```
-/help       Show help message
-/config     Show current configuration
-/sessions   List saved sessions
-/tools      List available tools
-/models     Show available models
-/clear      Clear the screen
-/exit       Exit LAXCODE
+❯❯❯ /read src/api.py
+
+❯❯❯ This endpoint has no input validation. Add Pydantic models.
+
+[LAXCODE reads the file, writes the fix, and applies it]
+
+❯❯❯ Now add unit tests for it
+
+[LAXCODE creates test_api.py with pytest tests]
 ```
 
-### Quick Tools
+---
 
-```
-/read <path>        Read a file with line numbers
-/glob <pattern>     Find files (e.g., "**/*.py")
-/grep <pattern>     Search for text in files
-```
+## Providers
 
-### Example Session
+| Provider | Cost | Setup |
+|---|---|---|
+| NVIDIA NIM | **Free** | `laxcode setup` → select NIM |
+| OpenAI | Paid | `export OPENAI_API_KEY=...` |
+| Anthropic | Paid | `export ANTHROPIC_API_KEY=...` |
 
-```bash
-$ laxcode
+**Recommended free models via NVIDIA NIM:**
 
-██╗      █████╗ ██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗
-██║     ██╔══██╗╚██╗██╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝
-██║     ███████║ ╚███╔╝ ██║     ██║   ██║██║  ██║█████╗
-██║     ██╔══██║ ██╔██╗ ██║     ██║   ██║██║  ██║██╔══╝
-███████╗██║  ██║██╔╝ ██╗╚██████╗╚██████╔╝██████╔╝███████╗
-╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝
+- `llama-3.1-8b` — fast, good for most tasks
+- `llama-3.1-70b` — higher quality, slower
+- `mistral-7b` — efficient
 
-           Powered by Laxmana AI
-     Agentic Coding Assistant for Developers
+---
 
-🚀 LAXMANA v1.2 COMING SOON!
+## Configuration
 
-Ready to code! Type /help for available commands.
-
-❯❯❯ Create a Python function to calculate fibonacci
-
-[Processing... ✓]
-
-Here's a Python function to calculate Fibonacci numbers:
-
-```python
-def fibonacci(n: int) -> int:
-    """Calculate the nth Fibonacci number."""
-    if n < 0:
-        raise ValueError("n must be non-negative")
-    if n <= 1:
-        return n
-    
-    a, b = 0, 1
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-    return b
-```
-
-❯❯❯ /read fibonacci.py
-
-[File: fibonacci.py]
-[Lines: 1-12 of 12]
-
-```python
-1: def fibonacci(n: int) -> int:
-2:     """Calculate the nth Fibonacci number."""
-3:     if n < 0:
-4:         raise ValueError("n must be non-negative")
-5:     if n <= 1:
-6:         return n
-7:
-8:     a, b = 0, 1
-9:     for _ in range(2, n + 1):
-10:         a, b = b, a + b
-11:     return b
-12:
-```
-
-❯❯❯ /exit
-
-Goodbye! 👋
-```
-
-## 🛠️ Available Tools
-
-### File Operations
-
-- **read** - Read file contents with line numbers
-- **edit** - Edit files by replacing text
-- **glob** - Find files matching glob patterns
-- **view** - View directory structure
-
-### Shell Operations
-
-- **bash** - Execute shell commands safely
-
-### Search Operations
-
-- **grep** - Search for patterns in files
-
-## ⚙️ Configuration
-
-Configuration is stored in `~/.laxcode/config.json`:
+Stored at `~/.laxcode/config.json`:
 
 ```json
 {
@@ -234,55 +133,63 @@ Configuration is stored in `~/.laxcode/config.json`:
 }
 ```
 
-### Environment Variables
+---
 
-- `NVIDIA_API_KEY` - NVIDIA NIM API key
-- `OPENAI_API_KEY` - OpenAI API key
-- `ANTHROPIC_API_KEY` - Anthropic API key
+## Animation states
 
-## 🎯 What's Coming in v1.2
+The terminal shows live state via the Laxmana AI animation system:
 
-- 🎨 **Enhanced Laxmana AI animations** - Voice waveform sync
-- 🤝 **Multi-agent collaboration** - Multiple agents working together
-- 🔍 **Code review & auto-refactoring** - AI-powered code improvements
-- 🔎 **Project-wide intelligent search** - Find anything instantly
-- 💻 **GitHub Copilot-style completions** - Inline suggestions
-- 🏠 **Local model support** - Run models locally with Llama.cpp
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Powered by [NVIDIA NIM](https://build.nvidia.com/explore)
-- Inspired by Claude Code and Kimi Code
-- Built with [Rich](https://github.com/Textualize/rich) for beautiful terminal output
-- [Laxmana AI](https://github.com/venkattejaa/LAXCODE) animation system
-
-## 🔗 Links
-
-- GitHub: https://github.com/venkattejaa/LAXCODE
-- Issues: https://github.com/venkattejaa/LAXCODE/issues
-- Documentation: https://github.com/venkattejaa/LAXCODE#readme
-- Discord: Coming soon!
+| State | Color | Meaning |
+|---|---|---|
+| Idle | 🟡 Gold | Waiting for input |
+| Listening | 🟢 Green | Ready |
+| Processing | 🟣 Purple | Thinking |
+| Working | 🔵 Cyan | Generating/editing |
+| Error | 🔴 Red | Something failed |
 
 ---
 
-<p align="center">
-  <strong>LAXCODE</strong> - Code with the power of Laxmana AI
-</p>
+## Safety
 
-<p align="center">
-  Made with ❤️ by the LAXCODE Team
-</p>
+- File operations are restricted to the working directory
+- Destructive shell commands are blocked
+- API keys are stored in `~/.laxcode/` and never committed
+
+---
+
+## Troubleshooting
+
+**"No API key configured"**
+
+```bash
+laxcode setup
+```
+
+**Windows Unicode issue**
+
+```bash
+chcp 65001
+```
+
+**`laxcode` command not found**
+
+```bash
+pip install -e .
+```
+
+---
+
+## Built by
+
+**Sugali Venkata Teja Naik** — AI engineer and full-stack developer from Guntakal, Andhra Pradesh.
+
+Part of the [LAXMANA](https://github.com/venkattejaa) ecosystem — a 768M parameter multilingual LLM built from scratch.
+
+- GitHub: [@venkattejaa](https://github.com/venkattejaa)
+- Portfolio: [venkattejaa.github.io/portfolio](https://venkattejaa.github.io/portfolio)
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE)
