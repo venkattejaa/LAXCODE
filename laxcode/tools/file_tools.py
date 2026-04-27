@@ -128,6 +128,18 @@ class FileEditTool(Tool):
                     f"Security error: Cannot edit files outside of workspace"
                 )
             
+            # Handle creating new files
+            if old_string == "":
+                # Create new file
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(new_string, encoding='utf-8')
+                return ToolResult.ok(
+                    output=f"Successfully created {file_path}",
+                    file_path=str(path),
+                    lines_changed=new_string.count('\n') + 1,
+                    start_line=1,
+                )
+            
             if not path.exists():
                 return ToolResult.error(f"File not found: {file_path}")
             

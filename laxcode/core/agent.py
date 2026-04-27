@@ -31,7 +31,7 @@ from ..tools.shell_tools import BashTool, ViewTool
 from ..tools.search_tools import GrepTool
 
 
-SYSTEM_PROMPT = """You are LAXCODE, an agentic AI coding assistant. You help users write, edit, debug, and understand code.
+SYSTEM_PROMPT_TEMPLATE = """You are LAXCODE, an agentic AI coding assistant. You help users write, edit, debug, and understand code.
 
 ## Tools available
 - `read`: Read file contents with line numbers
@@ -55,17 +55,17 @@ After each tool result, decide if more steps are needed. Only stop when the task
 
 ## Code quality rules - CRITICAL
 
-1. **NEVER import or reference laxcode, LAXCODE, or any internal modules in generated code.**
+1. NEVER import or reference laxcode, LAXCODE, or any internal modules in generated code.
    Generated code must be completely standalone and runnable without LAXCODE installed.
    
-   **WRONG:**
+   WRONG:
    ```python
    from laxcode import tools
    from laxcode.tools import FileEditTool
    import laxcode
    ```
    
-   **RIGHT:**
+   RIGHT:
    ```python
    # No laxcode imports - standalone code only
    ```
@@ -77,7 +77,7 @@ After each tool result, decide if more steps are needed. Only stop when the task
    - Meaningful variable names
 
 3. **Multiline file content must be properly formatted.**
-   When writing multiline content with `edit`, pass the actual newlines — never use `\\n` escape sequences as literal text.
+   When writing multiline content with `edit`, pass the actual newlines — never use literal backslash-n strings.
 
 4. **Never truncate code.** Always write complete, working implementations.
 
@@ -86,9 +86,7 @@ After each tool result, decide if more steps are needed. Only stop when the task
 ## File writing example
 To create `hello.py`, use edit with old_string="" (empty) to create a new file:
 ```
-edit(file_path="hello.py", old_string="", new_string="def greet(user: str) -> str:\n    return f'Hello, ' + user + '!'")
-```
-edit(file_path="hello.py", old_string="", new_string="def greet(name: str) -> str:\n    return f'Hello, {{name}}!'\n\nif __name__ == '__main__':\n    print(greet('World'))")
+edit(file_path="hello.py", old_string="", new_string="def greet(user: str) -> str:\n    return 'Hello, ' + user + '!'")
 ```
 
 ## Error handling
@@ -106,13 +104,13 @@ Safe to run without asking: `python`, `pip`, `ls`, `cat`, `echo`, `mkdir`, `cd`
 Always ask before: `rm`, `git push`, `pip uninstall`, anything with `sudo`
 
 ## Session context
-Platform: {{platform}}
-Working directory: {{cwd}}
+Platform: {platform}
+Working directory: {cwd}
 
 You are LAXCODE. Ship working code.
 """
 
-MAX_TOOL_ITERATIONS = 10  # prevent infinite loops
+MAX_TOOL_ITERATIONS = 10
 
 
 class LaxcodeAgent:
@@ -140,7 +138,6 @@ class LaxcodeAgent:
     
     async def initialize(self) -> bool:
         """Initialize the agent"""
-        # Check if API key is configured
         api_key = self.config_manager.get_api_key(self.config.provider)
         
         if not api_key:
@@ -185,8 +182,8 @@ class LaxcodeAgent:
         # Create new session
         self.session = self.session_store.create(workspace=str(os.getcwd()))
         
-        # Add system message
-        system_content = SYSTEM_PROMPT.format(
+        # Add system message with proper formatting
+        system_content = SYSTEM_PROMPT_TEMPLATE.format(
             platform=f"{platform.system()} {platform.release()}",
             cwd=os.getcwd()
         )
@@ -198,29 +195,25 @@ class LaxcodeAgent:
         """Show splash screen"""
         splash = """
 [bold cyan]
-██╗      █████╗ ██╗  ██╗ ██████╗ ██████╗ ██████╗ ███████╗
-██║     ██╔══██╗╚██╗██╔╝██╔════╝██╔═══██╗██╔══██╗██╔════╝
-██║     ███████║ ╚███╔╝ ██║     ██║   ██║██║  ██║█████╗  
-██║     ██╔══██║ ██╔██╗ ██║     ██║   ██║██║  ██║██╔══╝  
-███████╗██║  ██║██╔╝ ██╗╚██████╗╚██████╔╝██████╔╝███████╗
-╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝
+LAXCODE
 [/bold cyan]
 
-[bold yellow]           Powered by Laxmana AI[/bold yellow]
-[dim]     Agentic Coding Assistant for Developers[/dim]
+[bold yellow]Powered by Laxmana AI[/bold yellow]
+[dim]Agentic Coding Assistant[/dim]
 
-[green]Ready to code! Type /help for available commands.[/green]
+[green]Ready to code! Type /help for commands.[/green]
 """
         self.console.print(splash)
 
-    async def _execute_tool_call(self, tool_call) -> Dict[str, Any]:
+    async def _execute_tool_call(self, tool_call: ToolCall) -> Dict[str, Any]:
         """Execute a single tool call and return result dict"""
         tool = self.tool_registry.get(tool_call.name)
         if not tool:
             return {
                 "tool": tool_call.name,
                 "success": False,
-                "output": f"Unknown tool: {tool_call.name}"
+                "output": "",
+                "error": f"Unknown tool: {tool_call.name}"
             }
         
         try:
@@ -280,7 +273,7 @@ class LaxcodeAgent:
             
             final_response = response.content
             
-            # No tool calls → done
+            # No tool calls - done
             if not response.tool_calls:
                 self.session.add_assistant_message(
                     final_response,
@@ -300,10 +293,10 @@ class LaxcodeAgent:
                 result = await self._execute_tool_call(tool_call)
                 
                 # Show tool activity to user
-                status_icon = "✓" if result["success"] else "✗"
+                status_icon = "[OK]" if result["success"] else "[FAIL]"
                 status_color = "green" if result["success"] else "red"
                 self.console.print(
-                    f"  [{status_color}]{status_icon}[/{status_color}] "
+                    f" [{status_color}]{status_icon}[/{status_color}] "
                     f"[dim]{result['tool']}[/dim]"
                 )
                 
@@ -335,8 +328,9 @@ class LaxcodeAgent:
             self.session.add_user_message(
                 "[Tool results from previous step]\n" + "\n---\n".join(tool_results_text) + "\n\nContinue with the task. If it is complete, summarize what was done."
             )
-        else:
-            # Hit max iterations
+        
+        # Hit max iterations
+        if iteration >= MAX_TOOL_ITERATIONS:
             final_response += f"\n\n[Warning: reached max tool iterations ({MAX_TOOL_ITERATIONS})]"
         
         # Auto-save session
@@ -387,7 +381,6 @@ class LaxcodeAgent:
     
     def render_response(self, content: str) -> None:
         """Render assistant response with proper formatting"""
-        # Check for code blocks
         if "```" in content:
             parts = content.split("```")
             for i, part in enumerate(parts):
@@ -418,7 +411,7 @@ class LaxcodeAgent:
         while True:
             try:
                 # Get user input
-                user_input = self.console.input("[bold green]❯❯❯[/bold green] ")
+                user_input = self.console.input("[bold green]>>>[/bold green] ")
                 user_input = user_input.strip()
                 
                 if not user_input:
@@ -534,7 +527,7 @@ class LaxcodeAgent:
         self.console.print("[bold cyan]Available Tools:[/bold cyan]\n")
         
         for tool in self.tool_registry.get_all_tools():
-            dangerous = " [red](requires confirmation)[/red]" if tool.dangerous else ""
+            dangerous = " [red](dangerous)[/red]" if tool.dangerous else ""
             self.console.print(f"  [bold]{tool.name}[/bold]{dangerous}")
             self.console.print(f"    {tool.description}")
             self.console.print()
