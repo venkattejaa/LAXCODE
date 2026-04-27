@@ -2,7 +2,7 @@
 
 Welcome to LAXCODE! This guide will help you get started with your new AI coding assistant.
 
-## 🚀 What You've Built
+## 🚀 What I've Built
 
 **LAXCODE** is a fully functional agentic AI coding assistant with:
 - ✅ NVIDIA NIM API integration (FREE models)
