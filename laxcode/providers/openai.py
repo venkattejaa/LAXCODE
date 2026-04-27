@@ -46,7 +46,7 @@ class OpenAIProvider(Provider):
             )
         return self.session
     
-    async def chat(self, messages: List[Message]) -> Response:
+    async def chat(self, messages: List[Message], tools: Optional[List[Dict]] = None) -> Response:
         """Send chat request and get complete response"""
         session = await self._ensure_session()
         
@@ -60,6 +60,9 @@ class OpenAIProvider(Provider):
             "top_p": self.config.top_p,
             "stream": False,
         }
+        
+        if tools:
+            payload["tools"] = tools
         
         try:
             async with session.post(

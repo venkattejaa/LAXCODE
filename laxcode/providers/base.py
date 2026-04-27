@@ -100,12 +100,12 @@ class Provider(abc.ABC):
         self.config = config
     
     @abc.abstractmethod
-    async def chat(self, messages: List[Message]) -> Response:
+    async def chat(self, messages: List[Message], tools: Optional[List[Dict]] = None) -> Response:
         """Send a chat request and get a complete response"""
         pass
     
     @abc.abstractmethod
-    async def chat_stream(self, messages: List[Message]) -> AsyncIterator[str]:
+    async def chat_stream(self, messages: List[Message], tools: Optional[List[Dict]] = None) -> AsyncIterator[str]:
         """Send a chat request and stream the response"""
         pass
     

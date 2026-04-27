@@ -67,7 +67,7 @@ class AnthropicProvider(Provider):
             )
         return self.session
     
-    async def chat(self, messages: List[Message]) -> Response:
+    async def chat(self, messages: List[Message], tools: Optional[List[Dict]] = None) -> Response:
         """Send chat request and get complete response"""
         session = await self._ensure_session()
         
@@ -82,6 +82,8 @@ class AnthropicProvider(Provider):
             "temperature": self.config.temperature,
             "top_p": self.config.top_p,
         }
+        
+        # Anthropic has different tool format - skip for now
         
         try:
             async with session.post(
