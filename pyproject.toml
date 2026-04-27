@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "laxcode"
-version = "1.1.0"
+version = "1.2.0"
 description = "LAXCODE - Agentic AI Coding Agent with Laxmana AI animations and NVIDIA NIM API support"
 readme = "README.md"
 license = {text = "MIT"}

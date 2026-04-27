@@ -10,7 +10,7 @@ class TestFileDiffTool:
     """Test the unified diff editing tool"""
 
     @pytest.fixture
-    async def diff_tool(self):
+    def diff_tool(self):
         return FileDiffTool()
 
     @pytest.fixture
@@ -25,6 +25,7 @@ def goodbye():
 """)
         return file_path
 
+    @pytest.mark.asyncio
     async def test_apply_simple_diff(self, tmp_path, monkeypatch):
         """Test applying a simple unified diff"""
         # Change to temp directory
@@ -56,15 +57,15 @@ line3
         # Should fail because old line doesn't match
         assert not result.success
 
-    async def test_generate_diff(self):
+    def test_generate_diff(self):
         """Test diff generation helper"""
         original = """def add(a, b):
     return a + b"""
         modified = """def add(a: int, b: int) -> int:
     return a + b"""
-        
+
         diff = FileDiffTool.generate_diff(original, modified, "test.py")
-        
+
         assert "-def add(a, b):" in diff
         assert "+def add(a: int, b: int) -> int:" in diff
 
@@ -72,6 +73,7 @@ line3
 class TestTestRunnerTool:
     """Test the test runner tool"""
 
+    @pytest.mark.asyncio
     async def test_run_tests_no_pytest(self, tmp_path, monkeypatch):
         """Test behavior when pytest is not found"""
         monkeypatch.chdir(tmp_path)
@@ -92,6 +94,7 @@ class TestTestRunnerTool:
 class TestCodeLinterTool:
     """Test the linter tool"""
 
+    @pytest.mark.asyncio
     async def test_lint_code(self, tmp_path, monkeypatch):
         """Test linting Python code"""
         monkeypatch.chdir(tmp_path)
