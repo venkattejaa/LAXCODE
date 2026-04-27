@@ -72,19 +72,9 @@ After each tool result, decide if more steps are needed. Only stop when the task
 5. **Match the language and style of existing code** when editing files.
 
 ## File writing example
-To create `hello.py`:
+To create `hello.py`, use edit with old_string="" (empty) to create a new file:
 ```
-edit(
-    file_path="hello.py",
-    old_string="",
-    new_string="""def greet(name: str) -> str:
-    \"\"\"Return a greeting message.\"\"\"
-    return f"Hello, {name}!"
-
-if __name__ == "__main__":
-    print(greet("World"))
-"""
-)
+edit(file_path="hello.py", old_string="", new_string="def greet(name: str) -> str:\n    return f'Hello, {name}!'\n\nif __name__ == '__main__':\n    print(greet('World'))")
 ```
 
 ## Error handling
@@ -310,22 +300,14 @@ class LaxcodeAgent:
                     )
                 
                 tool_results_text.append(
-                    f"[Tool: {result['tool']}]
-"
-                    f"Success: {result['success']}
-"
-                    f"Output: {result['output']}
-"
+                    f"[Tool: {result['tool']}]\n"
+                    f"Success: {result['success']}\n"
+                    f"Output: {result['output']}\n"
                     f"Error: {result['error']}"
                 )
             
             # Feed tool results back into conversation
-            combined = response.content + "
-
-[Tool Results]
-" + "
----
-".join(tool_results_text)
+            combined = response.content + "\n\n[Tool Results]\n" + "\n---\n".join(tool_results_text)
             
             self.session.add_assistant_message(
                 combined,
@@ -337,18 +319,11 @@ class LaxcodeAgent:
             
             # Add tool results as user context for next iteration
             self.session.add_user_message(
-                f"[Tool results from previous step]
-" + "
----
-".join(tool_results_text) + "
-
-Continue with the task. If it is complete, summarize what was done."
+                "[Tool results from previous step]\n" + "\n---\n".join(tool_results_text) + "\n\nContinue with the task. If it is complete, summarize what was done."
             )
         else:
             # Hit max iterations
-            final_response += f"
-
-[Warning: reached max tool iterations ({MAX_TOOL_ITERATIONS})]"
+            final_response += f"\n\n[Warning: reached max tool iterations ({MAX_TOOL_ITERATIONS})]"
         
         # Auto-save session
         if self.config.auto_save:
@@ -387,9 +362,7 @@ Continue with the task. If it is complete, summarize what was done."
                 full_response.append(chunk)
                 yield chunk
         except Exception as e:
-            yield f"
-
-[Error: {e}]"
+            yield f"\n\n[Error: {e}]"
         
         # Store complete response
         complete = "".join(full_response)
