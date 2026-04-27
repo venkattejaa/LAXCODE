@@ -19,8 +19,11 @@ Unlike most AI coding tools, **NVIDIA NIM support means you can run it completel
 
 ## Features
 
-- **Multi-provider** — NVIDIA NIM (free), OpenAI, Anthropic Claude
+- **Multi-provider** — NVIDIA NIM (free), OpenAI, Anthropic Claude, Moonshot Kimi
 - **File operations** — read, edit, glob patterns, directory view
+- **Diff-based editing** — unified diff patches for safer, reviewable changes
+- **Test execution** — run pytest and iterate on failures automatically
+- **Code linting** — ruff integration for style checking
 - **Shell execution** — runs bash commands with safety checks
 - **Code search** — grep across your entire project
 - **Session persistence** — conversation history saved to `~/.laxcode/sessions/`
@@ -31,13 +34,19 @@ Unlike most AI coding tools, **NVIDIA NIM support means you can run it completel
 
 ## Installation
 
+### From PyPI (Recommended)
+
+```bash
+pip install laxcode
+```
+
+### From Source
+
 ```bash
 git clone https://github.com/venkattejaa/LAXCODE.git
 cd LAXCODE
 pip install -e .
 ```
-
-PyPI package coming in v1.2.
 
 ---
 
@@ -107,6 +116,7 @@ laxcode "Write a FastAPI endpoint that returns a list of users"
 | Provider | Cost | Setup |
 |---|---|---|
 | NVIDIA NIM | **Free** | `laxcode setup` → select NIM |
+| Moonshot Kimi | **Free tier** | `export MOONSHOT_API_KEY=...` |
 | OpenAI | Paid | `export OPENAI_API_KEY=...` |
 | Anthropic | Paid | `export ANTHROPIC_API_KEY=...` |
 
@@ -115,6 +125,14 @@ laxcode "Write a FastAPI endpoint that returns a list of users"
 - `llama-3.1-8b` — fast, good for most tasks
 - `llama-3.1-70b` — higher quality, slower
 - `mistral-7b` — efficient
+
+**Recommended models via Moonshot Kimi:**
+
+- `kimi-k2.5` — excellent for coding, long context (256k)
+- `kimi-k1.6` — reasoning-focused for complex problems
+- `kimi-k2` — fast and efficient for most tasks
+
+**Note:** Kimi models (especially kimi-k2.5) are particularly well-suited for coding tasks due to their strong performance on code generation and understanding.
 
 ---
 
